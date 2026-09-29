@@ -119,81 +119,87 @@ Merge Sort
 #include <stdio.h>
 #include <time.h>
 
-void merge(int arr[], int low, int mid, int high) {
+void merge(int arr[] , int s , int e) {
 
-    int temp[100];
-    int i = low;
-    int j = mid + 1;
-    int k = low;
+    int mid = (s + e) / 2;
+    
+    int len1 = mid - s + 1;
+    int len2 = e - mid;
 
-    while (i <= mid && j <= high) {
+    int arr1[len1];
+    int arr2[len2];
 
-        if (arr[i] < arr[j]) {
-            temp[k] = arr[i];
-            i++;
+    int mainIdx = s;
+
+    for(int i = 0 ; i < len1 ; i++){
+        arr1[i] = arr[mainIdx++];
+    }
+
+    mainIdx = mid + 1 ;
+    for(int i = 0 ; i < len2 ; i++){
+        arr2[i] = arr[mainIdx++];
+    }
+
+    int idx1 = 0;
+    int idx2 = 0;
+    mainIdx = s;
+
+    while(idx1 < len1 && idx2 < len2){
+        if(arr1[idx1] < arr2[idx2]){
+            arr[mainIdx++] = arr1[idx1++];
         }
-        else {
-            temp[k] = arr[j];
-            j++;
+        else{
+            arr[mainIdx++] = arr2[idx2++];
         }
-
-        k++;
     }
 
-    while (i <= mid) {
-        temp[k] = arr[i];
-        i++;
-        k++;
+    while(idx1 < len1) {
+        arr[mainIdx++] = arr1[idx1++];
     }
-
-    while (j <= high) {
-        temp[k] = arr[j];
-        j++;
-        k++;
+    
+    while(idx2 < len2) {
+        arr[mainIdx++] = arr2[idx2++];
     }
-
-    for (i = low; i <= high; i++) {
-        arr[i] = temp[i];
-    }
+    
 }
 
-void mergeSort(int arr[], int low, int high) {
+void mergeSort(int arr[] , int s , int e) {
 
-    if (low < high) {
-
-        int mid = (low + high) / 2;
-
-        mergeSort(arr, low, mid);
-        mergeSort(arr, mid + 1, high);
-
-        merge(arr, low, mid, high);
+    if (s >= e) {
+        return;
     }
+    
+    int mid = (s + e) / 2;
+    mergeSort(arr , s , mid);
+
+    mergeSort(arr , mid + 1 , e);
+
+    merge(arr , s , e);
+
 }
 
-int main() {
-
-    int arr[] = {5, 3, 8, 4, 2};
+void main(){
+    int arr[] = {5,4,3,2,1};
     int n = 5;
 
-    clock_t start = clock();
+    clock_t s = clock();
+    
+    mergeSort(arr , 0 , n - 1);
 
-    mergeSort(arr, 0, n - 1);
+    clock_t e = clock();
 
-    clock_t end = clock();
+    printf("sorted Array :");
 
-    printf("Sorted array: ");
-
-    for (int i = 0; i < n; i++) {
+    for(int i = 0 ; i < n ;i++){
         printf("%d ", arr[i]);
     }
 
-    double time_taken = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("\n");
 
-    printf("\nExecution Time: %f seconds", time_taken);
+    double totalTime = (double)(e - s) / CLOCKS_PER_SEC;
 
-    return 0;
+    printf("total take time : %f" , totalTime);
 }
-
 
 Quick Sort 
 
